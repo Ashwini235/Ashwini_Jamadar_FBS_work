@@ -1,0 +1,58 @@
+       
+        Module Test 1
+        Set B
+
+
+
+Q1.    select customername
+       from Customers
+       order by customername asc;
+
+Q2.    select Productname,Price
+       from Products
+       order by Price desc
+       limit 10;
+
+Q3.    select distinct salary
+       from Employees 
+       order by salary desc
+       limit 1;
+
+Q4.    select city,count(*) as customer count
+       from customers
+       group by city;
+
+Q5.    select department,sum(salary)
+       TotalSalary
+       from Employees
+       group by department
+       having sum(salary)>200000;
+
+
+Q7.    select*from Products
+       where Product_name like '%pro%';
+
+
+Q8.    select course, count(*) as
+       student count
+       from students
+       group by course
+       having count(*)>=30;
+
+
+Q10.   select department,
+       MAX(salary)
+       MIN(salary)
+       from Employees
+       group by department;
+
+Q11. option a
+
+
+Q12.  option a
+
+Q13.  option a
+
+Q14.  option b
+
+Q15.  option b
