@@ -1,0 +1,342 @@
+
+
+mysql> create database Hotel_Management;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use Hotel_Management;
+Database changed
+mysql> create table customer (customer_id int auto_increment primary key,
+    -> name varchar(50),
+    -> email varchar(50) unique not null,
+    -> phone varchar(15));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> create table room (room_id int auto_increment primary key,
+    -> room_type varchar(20),
+    -> rent_per_day decimal(10,2));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table booking (booking_id int auto_increment primary key,
+    -> customer_id int,
+    -> room_id int,
+    -> check_in date,
+    -> check_out date,
+    -> foreign key (customer_id)
+    -> references customer(customer_id),
+    -> foreign key (room_id) references room(room_id));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> create table food_menu ( food_id int auto_increment primary key,
+    -> food_name varchar(50),
+    -> price decimal(10,2));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table food_order (order_id int auto_increment primary key,
+    -> booking_id int,
+    -> food_id int,
+    -> quantity int,
+    -> foreign key (booking_id)
+    -> references booking(booking_id),
+    -> foreign key (food_id) references food_menu(food_id));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> create table laundry (laundry_id int auto_increment primary key,
+    -> booking_id int,
+    -> no_of_clothes int,
+    -> charge_per_cloth int default 20,
+    -> foreign key (booking_id)
+    -> references booking(booking_id));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> create table site_visit (visit_id int auto_increment primary key,
+    -> booking_id int,
+    -> vehicle_type varchar(20),
+    -> rate_per_day decimal(10,2),
+    -> no_of_days int,
+    -> foreign key (booking_id)
+    -> references booking(booking_id));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> create table invoice (invoice_id int auto_increment primary key,
+    -> booking_id int,
+    -> room_charges decimal(10,2),
+    -> food_charges decimal(10,2),
+    -> laundry_charges decimal(10,2),
+    -> site_visit_charges decimal(10,2),
+    -> total_amount decimal(10,2),
+    -> invoice_date date,
+    -> foreign key (booking_id)
+    -> references booking(booking_id));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> show tables;
++----------------------------+
+| Tables_in_hotel_management |
++----------------------------+
+| booking                    |
+| customer                   |
+| food_menu                  |
+| food_order                 |
+| invoice                    |
+| laundry                   |
+| room                       |
+| site_visit                 |
++----------------------------+
+8 rows in set (0.01 sec
+
+mysql> insert into customer(name,email,phone)
+    -> values ('Ashwini kotale','ashwinikotale@gmail.com','9087654321');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into room (room_type,rent_per_day)
+    -> values ('Basic',2000),('Luxury',5000);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+
+mysql> insert into booking (customer_id,room_id,check_in,check_out)
+    -> values (1,2,'2025-01-01','2025-01-03');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into food_menu (food_name,price)
+    -> values ('Veg Thali',250),('Tea',50);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> insert into food_order
+    -> (booking_id,food_id,quantity)
+    -> values (1,1,2),(1,2,3);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> insert into laundry (booking_id,no_of_clothes) values (1,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> inser into site_visit (booking_id,vehicle_type,rate_per_day,no_of_days)
+    -> values (1,'Car',1500,1);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'inser into site_visit (booking_id,vehicle_type,rate_per_day,no_of_days)
+values (' at line 1
+mysql> insert into site_visit (booking_id, vehicle_type, rate_per_day, no_of_days)
+    -> values (1,'Car',1500, 1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select*from customer;
++-------------+----------------+-------------------------+------------+
+| customer_id | name           | email                   | phone      |
++-------------+----------------+-------------------------+------------+
+|           1 | Ashwini kotale | ashwinikotale@gmail.com | 9087654321 |
++-------------+----------------+-------------------------+------------+
+1 row in set (0.01 sec)
+
+mysql> select*from room;
++---------+-----------+--------------+
+| room_id | room_type | rent_per_day |
++---------+-----------+--------------+
+|       1 | Basic     |      2000.00 |
+|       2 | Luxury    |      5000.00 |
++---------+-----------+--------------+
+2 rows in set (0.01 sec)
+
+mysql> select*from booking;
++------------+-------------+---------+------------+------------+
+| booking_id | customer_id | room_id | check_in   | check_out  |
++------------+-------------+---------+------------+------------+
+|          1 |           1 |       2 | 2025-01-01 | 2025-01-03 |
++------------+-------------+---------+------------+------------+
+1 row in set (0.00 sec)
+
+
+mysql> select*from food_menu;
++---------+-----------+--------+
+| food_id | food_name | price  |
++---------+-----------+--------+
+|       1 | Veg Thali | 250.00 |
+|       2 | Tea       |  50.00 |
++---------+-----------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select*from food_order;
++----------+------------+---------+----------+
+| order_id | booking_id | food_id | quantity |
++----------+------------+---------+----------+
+|        1 |          1 |       1 |        2 |
+|        2 |          1 |       2 |        3 |
++----------+------------+---------+----------+
+2 rows in set (0.00 sec)
+
+mysql> select*from laundry;
++------------+------------+---------------+------------------+
+| laundry_id | booking_id | no_of_clothes | charge_per_cloth |
++------------+------------+---------------+------------------+
+|          1 |          1 |            10 |               20 |
++------------+------------+---------------+------------------+
+1 row in set (0.00 sec)
+
+mysql> select*from site_visit;
++----------+------------+--------------+--------------+------------+
+| visit_id | booking_id | vehicle_type | rate_per_day | no_of_days |
++----------+------------+--------------+--------------+------------+
+|        1 |          1 | Car          |      1500.00 |          1 |
++----------+------------+--------------+--
+
+
+mysql> insert into invoice (booking_id, total_amount, invoice_date)
+    -> values (1,2000,'2025-01-10');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select*from invoice;
+
++------------+--------------+--------------+-----------------+--------------------+--------------+--------------+
+| booking_id | room_charges | food_charges | laundry_charges | site_visit_charges | total_amount | invoice_date |
++------------+--------------+--------------+-----------------+--------------------+--------------+--------------+
+|          1 |         NULL |         NULL |            NULL |               NULL |      2000.00 | 2025-01-10   |
++------------+--------------+--------------+-----------------+--------------------+--------------+--------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
