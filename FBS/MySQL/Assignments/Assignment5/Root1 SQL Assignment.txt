@@ -1,0 +1,773 @@
+===================Root1 SQL Assignment==================
+
+
+
+mysql> use assignments;
+Database changed
+
+[QUESTION 1].mysql> select*from book where author='Loni' and price<600;
++---------+------------------+--------+----------+-------+
+| book_id | book_name        | author | category | price |
++---------+------------------+--------+----------+-------+
+|     201 | SQL Fundamentals | Loni   | database |   550 |
++---------+------------------+--------+----------+-------+
+1 row in set (0.00 sec)
+
+[QUESTION 2].mysql> select*from issue where return_date is null;
++----------+---------+-----------+------------+-------------+
+| issue_id | book_id | member_id | issue_date | return_date |
++----------+---------+-----------+------------+-------------+
+|     7001 |     201 |       101 | 2006-12-01 | NULL        |
+|     7004 |     204 |       103 | 2006-11-01 | NULL        |
+|     7005 |     205 |       104 | 2006-12-10 | NULL        |
+|     7009 |     209 |       108 | 2006-12-22 | NULL        |
++----------+---------+-----------+------------+-------------+
+4 rows in set (0.00 sec)
+
+[QUESTION 3].mysql> update issue set return_date='2006-12-31'
+    -> where return_date is null
+    -> and issue_id not in (7005,7006);
+Query OK, 3 rows affected (0.01 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+[QUESTION 4].mysql> select*from issue
+    -> wheredatediff(ifnull(return_date,curdate()),issue_date)>30;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(ifnull(return_date,curdate()),issue_date)>30' at line 2
+mysql> select*from issue
+    -> where datediff(ifnull(return_date,curdate()),issue_date)>30;
++----------+---------+-----------+------------+-------------+
+| issue_id | book_id | member_id | issue_date | return_date |
++----------+---------+-----------+------------+-------------+
+|     7002 |     202 |       101 | 2006-07-10 | 2006-08-15  |
+|     7004 |     204 |       103 | 2006-11-01 | 2006-12-31  |
+|     7005 |     205 |       104 | 2006-12-10 | NULL        |
+|     7007 |     207 |       106 | 2006-12-18 | 2007-01-20  |
+|     7010 |     201 |       109 | 2006-03-10 | 2006-04-12  |
++----------+---------+-----------+------------+-------------+
+5 rows in set (0.01 sec)
+
+[QUESTION 5].mysql> select*from book where price between 500 and 750 and category='database';
++---------+------------------+-------------+----------+-------+
+| book_id | book_name        | author      | category | price |
++---------+------------------+-------------+----------+-------+
+|     201 | SQL Fundamentals | Loni        | database |   550 |
+|     202 | Advanced SQL     | Loni        | database |   650 |
+|     204 | Oracle RDBMS     | Scott Urman | database |   720 |
++---------+------------------+-------------+----------+-------+
+3 rows in set (0.00 sec)
+
+[QUESTION 6].mysql> select*from book
+    -> where category in
+    -> ('Science','database','fiction','Management');
++---------+-------------------+-------------+------------+-------+
+| book_id | book_name         | author      | category   | price |
++---------+-------------------+-------------+------------+-------+
+|     201 | SQL Fundamentals  | Loni        | database   |   550 |
+|     202 | Advanced SQL      | Loni        | database   |   650 |
+|     203 | DBMS Concepts     | Scott Urman | database   |   800 |
+|     204 | Oracle RDBMS      | Scott Urman | database   |   720 |
+|     206 | Science Today     | Rao         | Science    |   600 |
+|     207 | Modern Physics    | Rao         | Science    |   500 |
+|     208 | Business Strategy | Peter       | Management |   750 |
+|     209 | Management Basics | Peter       | Management |   650 |
+|     210 | Fiction World     | John        | fiction    |   450 |
++---------+-------------------+-------------+------------+-------+
+9 rows in set (0.00 sec)
+
+[QUESTION 7].mysql> select*from member
+    -> order by penalty desc;
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+| member_id | member_name  | member_type | join_date  | acc_open_date | membership_fee | max_books_allowed | penalty |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+|       104 | Neha Patil   | Lifetime    | 2006-01-10 | 2006-01-10    |           1200 |                 6 |     300 |
+|       101 | Garima Sen   | Lifetime    | 2006-01-10 | 2006-01-10    |           1000 |                 5 |     250 |
+|       107 | Suresh Rao   | Regular     | 2006-06-18 | 2006-06-18    |            500 |                 3 |     200 |
+|       106 | Pooja Mehta  | Lifetime    | 2006-05-12 | 2006-05-12    |           1100 |                 5 |     150 |
+|       102 | Richa Sharma | Regular     | 2006-02-15 | 2006-02-15    |            500 |                 3 |     100 |
+|       108 | Kiran Joshi  | Lifetime    | 2006-07-01 | 2006-07-01    |           1300 |                 6 |     100 |
+|       109 | Ankit Desai  | Regular     | 2006-08-10 | 2006-08-10    |            450 |                 2 |      75 |
+|       103 | Amit Kumar   | Regular     | 2006-03-20 | 2006-03-20    |            400 |                 2 |      50 |
+|       105 | Rahul Verma  | Regular     | 2006-04-05 | 2006-04-05    |            450 |                 2 |       0 |
+|       110 | Vikas Singh  | Lifetime    | 2006-09-15 | 2006-09-15    |           1400 |                 7 |       0 |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+10 rows in set (0.00 sec)
+
+[QUESTION 8].mysql> update book
+    -> set price=300, category='rdbms'
+    -> where book_id=103;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+[Question 9].mysql> select*from book
+    -> order by category asc, price desc;
++---------+-------------------+-------------+-------------+-------+
+| book_id | book_name         | author      | category    | price |
++---------+-------------------+-------------+-------------+-------+
+|     203 | DBMS Concepts     | Scott Urman | database    |   800 |
+|     204 | Oracle RDBMS      | Scott Urman | database    |   720 |
+|     202 | Advanced SQL      | Loni        | database    |   650 |
+|     201 | SQL Fundamentals  | Loni        | database    |   550 |
+|     210 | Fiction World     | John        | fiction     |   450 |
+|     208 | Business Strategy | Peter       | Management  |   750 |
+|     209 | Management Basics | Peter       | Management  |   650 |
+|     205 | C Programming     | Dennis      | Programming |   300 |
+|     206 | Science Today     | Rao         | Science     |   600 |
+|     207 | Modern Physics    | Rao         | Science     |   500 |
++---------+-------------------+-------------+-------------+-------+
+10 rows in set (0.00 sec)
+
+
+[QUESTION 10].mysql> select*from book
+    -> where book_name like '%SQL%';
++---------+------------------+--------+----------+-------+
+| book_id | book_name        | author | category | price |
++---------+------------------+--------+----------+-------+
+|     201 | SQL Fundamentals | Loni   | database |   550 |
+|     202 | Advanced SQL     | Loni   | database |   650 |
++---------+------------------+--------+----------+-------+
+2 rows in set (0.00 sec)
+
+[QUESTION 11].mysql> select issue_id, issue_date, return_date,
+    -> datediff(ifnull(return_date,curdate()),issue_date) as no_of_days
+    -> from issue;
++----------+------------+-------------+------------+
+| issue_id | issue_date | return_date | no_of_days |
++----------+------------+-------------+------------+
+|     7001 | 2006-12-01 | 2006-12-31  |         30 |
+|     7002 | 2006-07-10 | 2006-08-15  |         36 |
+|     7003 | 2006-12-05 | 2006-12-20  |         15 |
+|     7004 | 2006-11-01 | 2006-12-31  |         60 |
+|     7005 | 2006-12-10 | NULL        |       6975 |
+|     7006 | 2006-06-15 | 2006-07-10  |         25 |
+|     7007 | 2006-12-18 | 2007-01-20  |         33 |
+|     7008 | 2006-05-01 | 2006-05-30  |         29 |
+|     7009 | 2006-12-22 | 2006-12-31  |          9 |
+|     7010 | 2006-03-10 | 2006-04-12  |         33 |
++----------+------------+-------------+------------+
+10 rows in set (0.00 sec)
+
+[QUESTION 12].mysql> select*from member
+    -> order by join_date;
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+| member_id | member_name  | member_type | join_date  | acc_open_date | membership_fee | max_books_allowed | penalty |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+|       101 | Garima Sen   | Lifetime    | 2006-01-10 | 2006-01-10    |           1000 |                 5 |     250 |
+|       104 | Neha Patil   | Lifetime    | 2006-01-10 | 2006-01-10    |           1200 |                 6 |     300 |
+|       102 | Richa Sharma | Regular     | 2006-02-15 | 2006-02-15    |            500 |                 3 |     100 |
+|       103 | Amit Kumar   | Regular     | 2006-03-20 | 2006-03-20    |            400 |                 2 |      50 |
+|       105 | Rahul Verma  | Regular     | 2006-04-05 | 2006-04-05    |            450 |                 2 |       0 |
+|       106 | Pooja Mehta  | Lifetime    | 2006-05-12 | 2006-05-12    |           1100 |                 5 |     150 |
+|       107 | Suresh Rao   | Regular     | 2006-06-18 | 2006-06-18    |            500 |                 3 |     200 |
+|       108 | Kiran Joshi  | Lifetime    | 2006-07-01 | 2006-07-01    |           1300 |                 6 |     100 |
+|       109 | Ankit Desai  | Regular     | 2006-08-10 | 2006-08-10    |            450 |                 2 |      75 |
+|       110 | Vikas Singh  | Lifetime    | 2006-09-15 | 2006-09-15    |           1400 |                 7 |       0 |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+10 rows in set (0.00 sec)
+
+[QUESTION 13].mysql> select count(*) from issue
+    -> where member_id=101;
++----------+
+| count(*) |
++----------+
+|        2 |
++----------+
+1 row in set (0.00 sec)
+
+[QUESTION 14].mysql> select sum(penalty) from member;
++--------------+
+| sum(penalty) |
++--------------+
+|         1225 |
++--------------+
+1 row in set (0.00 sec)
+
+[QUESTION 15].mysql> select count(*) from member;
++----------+
+| count(*) |
++----------+
+|       10 |
++----------+
+1 row in set (0.02 sec)
+
+[QUESTION 16].mysql> select count(*) from issue;
++----------+
+| count(*) |
++----------+
+|       10 |
++----------+
+1 row in set (0.00 sec)
+
+[QUESTION 17].mysql> select AVG(membership_fees)from member;
+ERROR 1054 (42S22): Unknown column 'membership_fees' in 'field list'
+mysql> select AVG(membership_fee) from member;
++---------------------+
+| AVG(membership_fee) |
++---------------------+
+|            830.0000 |
++---------------------+
+1 row in set (0.00 sec)
+
+[QUESTION 18].mysql> select category,count(*)
+    -> from book
+    -> group by category;
++-------------+----------+
+| category    | count(*) |
++-------------+----------+
+| database    |        4 |
+| Programming |        1 |
+| Science     |        2 |
+| Management  |        2 |
+| fiction     |        1 |
++-------------+----------+
+5 rows in set (0.01 sec)
+
+[QUESTION 19].mysql> select book_id,count(*) as  issue_count
+    -> from issue
+    -> group by book_id
+    -> order by issue_count desc;
++---------+-------------+
+| book_id | issue_count |
++---------+-------------+
+|     201 |           2 |
+|     202 |           1 |
+|     203 |           1 |
+|     204 |           1 |
+|     205 |           1 |
+|     206 |           1 |
+|     207 |           1 |
+|     208 |           1 |
+|     209 |           1 |
++---------+-------------+
+9 rows in set (0.00 sec)
+
+[QUESTION 20].mysql> select max(penalty),min(penalty),
+    -> sum(penalty),AVG(penalty)
+    -> from member;
++--------------+--------------+--------------+--------------+
+| max(penalty) | min(penalty) | sum(penalty) | AVG(penalty) |
++--------------+--------------+--------------+--------------+
+|          300 |            0 |         1225 |     122.5000 |
++--------------+--------------+--------------+--------------+
+1 row in set (0.00 sec)
+
+[QUESTION 21].mysql> select member_id,count(*)
+    -> from issue
+    -> group by member_id
+    -> having count(*)>2;
+Empty set (0.01 sec)
+
+[QUESTION 22].mysql> select member_id,book_id,count(*)
+    -> from issue
+    -> group by member_id,book_id
+    -> order by count(*) desc;
++-----------+---------+----------+
+| member_id | book_id | count(*) |
++-----------+---------+----------+
+|       101 |     201 |        1 |
+|       101 |     202 |        1 |
+|       102 |     203 |        1 |
+|       103 |     204 |        1 |
+|       104 |     205 |        1 |
+|       105 |     206 |        1 |
+|       106 |     207 |        1 |
+|       107 |     208 |        1 |
+|       108 |     209 |        1 |
+|       109 |     201 |        1 |
++-----------+---------+----------+
+10 rows in set (0.00 sec)
+
+[QUESTION 23].mysql> select monthname(issue_date),count(*)
+    -> from issue group by monthname(issue_date)
+    -> order by count(*) desc;
++-----------------------+----------+
+| monthname(issue_date) | count(*) |
++-----------------------+----------+
+| December              |        5 |
+| July                  |        1 |
+| November              |        1 |
+| June                  |        1 |
+| May                   |        1 |
+| March                 |        1 |
++-----------------------+----------+
+6 rows in set (0.01 sec)
+
+[QUESTION 24].mysql> select book_id from book
+    -> where book_id not in (select book_id from issue);
++---------+
+| book_id |
++---------+
+|     210 |
++---------+
+1 row in set (0.01 sec)
+
+
+mysql> use assignments;
+Database changed
+[QUESTION 25].mysql> select distinct member_id from issue;
++-----------+
+| member_id |
++-----------+
+|       101 |
+|       102 |
+|       103 |
+|       104 |
+|       105 |
+|       106 |
+|       107 |
+|       108 |
+|       109 |
++-----------+
+9 rows in set (0.01 sec)
+
+[QUESTION 26].mysql> select member_id, count(*) from issue
+    -> group by member_id
+    -> order by count(*) desc limit 1;
++-----------+----------+
+| member_id | count(*) |
++-----------+----------+
+|       101 |        2 |
++-----------+----------+
+1 row in set (0.00 sec)
+
+mysql> select member_id , count(*) from issue
+    -> group by member_id
+    -> order by count(*) asc limit 1;
++-----------+----------+
+| member_id | count(*) |
++-----------+----------+
+|       109 |        1 |
++-----------+----------+
+1 row in set (0.00 sec)
+
+[QUESTION 27].mysql> select*from issue
+    -> where monthname (issue_date)
+    -> in ('December','July');
++----------+---------+-----------+------------+-------------+
+| issue_id | book_id | member_id | issue_date | return_date |
++----------+---------+-----------+------------+-------------+
+|     7001 |     201 |       101 | 2006-12-01 | 2006-12-31  |
+|     7002 |     202 |       101 | 2006-07-10 | 2006-08-15  |
+|     7003 |     203 |       102 | 2006-12-05 | 2006-12-20  |
+|     7005 |     205 |       104 | 2006-12-10 | NULL        |
+|     7007 |     207 |       106 | 2006-12-18 | 2007-01-20  |
+|     7009 |     209 |       108 | 2006-12-22 | 2006-12-31  |
++----------+---------+-----------+------------+-------------+
+6 rows in set (0.01 sec)
+
+[QUESTION 28].mysql> select b.book_id,b.book_name,i.issue_date
+    -> from book b, issue i
+    -> where b.book_id=i.book_id
+    -> and b.category='database'
+    -> and monthname(i.issue_date)='December';
++---------+------------------+------------+
+| book_id | book_name        | issue_date |
++---------+------------------+------------+
+|     201 | SQL Fundamentals | 2006-12-01 |
+|     203 | DBMS Concepts    | 2006-12-05 |
++---------+------------------+------------+
+2 rows in set (0.00 sec)
+
+[QUESTION 29].mysql> select member_id, member_name,
+    -> max_books_allowed
+    -> from member
+    -> order by max_books_allowed
+    -> desc;
++-----------+--------------+-------------------+
+| member_id | member_name  | max_books_allowed |
++-----------+--------------+-------------------+
+|       110 | Vikas Singh  |                 7 |
+|       104 | Neha Patil   |                 6 |
+|       108 | Kiran Joshi  |                 6 |
+|       101 | Garima Sen   |                 5 |
+|       106 | Pooja Mehta  |                 5 |
+|       102 | Richa Sharma |                 3 |
+|       107 | Suresh Rao   |                 3 |
+|       103 | Amit Kumar   |                 2 |
+|       105 | Rahul Verma  |                 2 |
+|       109 | Ankit Desai  |                 2 |
++-----------+--------------+-------------------+
+10 rows in set (0.00 sec)
+
+
+mysql> use assignments;
+Database changed
+[QUESTION 30].mysql> select b.book_id,b.book_name,i.issue_date,i.return_date
+    -> from bookb,issue i,member m
+    -> where b.book_id=i.book_id
+    -> and i.member_id=m.member_id
+    -> and m.member_name='Richa Sharma';
+ERROR 1146 (42S02): Table 'assignments.bookb' doesn't exist
+mysql> select b.book_id,b.book_name,i.issue_date,i.return_date
+    -> from book b,issue i, member m
+    -> where b.book_id=i.book_id
+    -> and i.member_id=m.member_id
+    -> and m.member_name='Richa Sharma';
++---------+---------------+------------+-------------+
+| book_id | book_name     | issue_date | return_date |
++---------+---------------+------------+-------------+
+|     203 | DBMS Concepts | 2006-12-05 | 2006-12-20  |
++---------+---------------+------------+-------------+
+1 row in set (0.00 sec)
+
+[QUESTION 31].mysql> select distinct m*from member m,issue i, book b
+    -> where m.member_id=i.member_id
+    -> and i.book_id=b.book_id
+    -> and b.category='database';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from member m,issue i, book b
+where m.member_id=i.member_id
+and i.book_id=b.book' at line 1
+mysql> select distinct m.*from member m, issue i, book b
+    -> where m.member_id=i.member_id
+    -> and i.book_id=b.book_id
+    -> and b.category='database';
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+| member_id | member_name  | member_type | join_date  | acc_open_date | membership_fee | max_books_allowed | penalty |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+|       101 | Garima Sen   | Lifetime    | 2006-01-10 | 2006-01-10    |           1000 |                 5 |     250 |
+|       109 | Ankit Desai  | Regular     | 2006-08-10 | 2006-08-10    |            450 |                 2 |      75 |
+|       102 | Richa Sharma | Regular     | 2006-02-15 | 2006-02-15    |            500 |                 3 |     100 |
+|       103 | Amit Kumar   | Regular     | 2006-03-20 | 2006-03-20    |            400 |                 2 |      50 |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+4 rows in set (0.00 sec)
+
+[QUESTION 32].mysql> select*from book b
+    -> where price=(select max(price)
+    -> from book where
+    -> category=b.category);
++---------+-------------------+-------------+-------------+-------+
+| book_id | book_name         | author      | category    | price |
++---------+-------------------+-------------+-------------+-------+
+|     203 | DBMS Concepts     | Scott Urman | database    |   800 |
+|     205 | C Programming     | Dennis      | Programming |   300 |
+|     206 | Science Today     | Rao         | Science     |   600 |
+|     208 | Business Strategy | Peter       | Management  |   750 |
+|     210 | Fiction World     | John        | fiction     |   450 |
++---------+-------------------+-------------+-------------+-------+
+5 rows in set (0.00 sec)
+
+[QUESTION 33].mysql> select i.*from issue i,member m
+    -> where i.member_id=m.member_id
+    -> and i.issue_date not between
+    -> m.acc_open_date and i.return_date;
++----------+---------+-----------+------------+-------------+
+| issue_id | book_id | member_id | issue_date | return_date |
++----------+---------+-----------+------------+-------------+
+|     7008 |     208 |       107 | 2006-05-01 | 2006-05-30  |
+|     7010 |     201 |       109 | 2006-03-10 | 2006-04-12  |
++----------+---------+-----------+------------+-------------+
+2 rows in set (0.00 sec)
+
+[QUESTION 34].mysql> select*from member
+    -> where member_id not in(select member_id from issue);
++-----------+-------------+-------------+------------+---------------+----------------+-------------------+---------+
+| member_id | member_name | member_type | join_date  | acc_open_date | membership_fee | max_books_allowed | penalty |
++-----------+-------------+-------------+------------+---------------+----------------+-------------------+---------+
+|       110 | Vikas Singh | Lifetime    | 2006-09-15 | 2006-09-15    |           1400 |                 7 |       0 |
++-----------+-------------+-------------+------------+---------------+----------------+-------------------+---------+
+1 row in set (0.00 sec)
+
+[QUESTION 35].mysql> select distinct m.member_name
+    -> from member m, issue i
+    -> where m.member_id=i.member_id
+    -> and i.book_id in(select book_id from issue where member_id=(select member_id from member where member_name='Garima'));
+Empty set (0.01 sec)
+
+[QUESTION 36].mysql> select b.book_name,b.price
+    -> from book b,issue i
+    -> where b.book_id=i.book_id
+    -> and i.return_date is null
+    -> and datediff(curdate(),i.issue_date)>30;
++---------------+-------+
+| book_name     | price |
++---------------+-------+
+| C Programming |   300 |
++---------------+-------+
+1 row in set (0.00 sec)
+
+[QUESTION 37].mysql> select author,book_name from book
+    -> where author in
+    -> (select author from book
+    -> group by author having
+    -> count(*)>1);
++-------------+-------------------+
+| author      | book_name         |
++-------------+-------------------+
+| Loni        | SQL Fundamentals  |
+| Loni        | Advanced SQL      |
+| Scott Urman | DBMS Concepts     |
+| Scott Urman | Oracle RDBMS      |
+| Rao         | Science Today     |
+| Rao         | Modern Physics    |
+| Peter       | Business Strategy |
+| Peter       | Management Basics |
++-------------+-------------------+
+8 rows in set (0.00 sec)
+
+[QUESTION 38].mysql> select member_id,member_name
+    -> from member
+    -> where member_id in
+    -> (select member_id from issue
+    -> group by member_id
+    -> having count(*)=
+    -> (select max(c) from
+    -> (select count(*) c from issue
+    -> group by member_id)x)
+    -> or count(*)=
+    -> (select min(c) from
+    -> (select count(*) c from issue
+    -> group by member_id)y));
++-----------+--------------+
+| member_id | member_name  |
++-----------+--------------+
+|       101 | Garima Sen   |
+|       102 | Richa Sharma |
+|       103 | Amit Kumar   |
+|       104 | Neha Patil   |
+|       105 | Rahul Verma  |
+|       106 | Pooja Mehta  |
+|       107 | Suresh Rao   |
+|       108 | Kiran Joshi  |
+|       109 | Ankit Desai  |
++-----------+--------------+
+9 rows in set (0.00 sec)
+
+[QUESTION 39].mysql> select*from book
+    -> order by price desc
+    -> limit 3;
++---------+-------------------+-------------+------------+-------+
+| book_id | book_name         | author      | category   | price |
++---------+-------------------+-------------+------------+-------+
+|     203 | DBMS Concepts     | Scott Urman | database   |   800 |
+|     208 | Business Strategy | Peter       | Management |   750 |
+|     204 | Oracle RDBMS      | Scott Urman | database   |   720 |
++---------+-------------------+-------------+------------+-------+
+3 rows in set (0.00 sec)
+
+[QUESTION 40].mysql> select sum(b.price)
+    -> from book b,issue i
+    -> where b.book_id=i.book_id
+    -> and i.return_date is null;
++--------------+
+| sum(b.price) |
++--------------+
+|          300 |
++--------------+
+1 row in set (0.00 sec)
+
+
+[QUESTION 41].mysql> select*from book
+    -> where book_id=(select book_id from issue
+    -> group by book_id
+    -> order by count(*) desc limit 1);
++---------+------------------+--------+----------+-------+
+| book_id | book_name        | author | category | price |
++---------+------------------+--------+----------+-------+
+|     201 | SQL Fundamentals | Loni   | database |   550 |
++---------+------------------+--------+----------+-------+
+1 row in set (0.00 sec)
+
+[QUESTION 42].mysql> select count(*) from issue i, member m
+    -> where i.member_id=m.member_id
+    -> and m.member_type='Lifetime';
++----------+
+| count(*) |
++----------+
+|        5 |
++----------+
+1 row in set (0.00 sec)
+
+[QUESTION 43].mysql> select member_type,count(*)
+    -> from member
+    -> group by member_type;
++-------------+----------+
+| member_type | count(*) |
++-------------+----------+
+| Lifetime    |        5 |
+| Regular     |        5 |
++-------------+----------+
+2 rows in set (0.00 sec)
+
+[QUESTION 44].mysql> select*from member
+    -> order by join_date
+    -> limit 5;
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+| member_id | member_name  | member_type | join_date  | acc_open_date | membership_fee | max_books_allowed | penalty |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+|       101 | Garima Sen   | Lifetime    | 2006-01-10 | 2006-01-10    |           1000 |                 5 |     250 |
+|       104 | Neha Patil   | Lifetime    | 2006-01-10 | 2006-01-10    |           1200 |                 6 |     300 |
+|       102 | Richa Sharma | Regular     | 2006-02-15 | 2006-02-15    |            500 |                 3 |     100 |
+|       103 | Amit Kumar   | Regular     | 2006-03-20 | 2006-03-20    |            400 |                 2 |      50 |
+|       105 | Rahul Verma  | Regular     | 2006-04-05 | 2006-04-05    |            450 |                 2 |       0 |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+5 rows in set (0.00 sec)
+
+[QUESTION 45].mysql> select distinct m.member_id,m.member_name,m.member_type
+    -> from member m,issue i
+    -> where m.member_id=i.member_id
+    -> and i.issue_date between
+    -> '2006-12-01'and '2006-12-31';
++-----------+--------------+-------------+
+| member_id | member_name  | member_type |
++-----------+--------------+-------------+
+|       101 | Garima Sen   | Lifetime    |
+|       102 | Richa Sharma | Regular     |
+|       104 | Neha Patil   | Lifetime    |
+|       106 | Pooja Mehta  | Lifetime    |
+|       108 | Kiran Joshi  | Lifetime    |
++-----------+--------------+-------------+
+5 rows in set (0.00 sec)
+
+[QUESTION 46].mysql> select distinct m.*from member m,issue i
+    -> where m.member_id=i.member_id
+    -> and i.return_date is null;
++-----------+-------------+-------------+------------+---------------+----------------+-------------------+---------+
+| member_id | member_name | member_type | join_date  | acc_open_date | membership_fee | max_books_allowed | penalty |
++-----------+-------------+-------------+------------+---------------+----------------+-------------------+---------+
+|       104 | Neha Patil  | Lifetime    | 2006-01-10 | 2006-01-10    |           1200 |                 6 |     300 |
++-----------+-------------+-------------+------------+---------------+----------------+-------------------+---------+
+1 row in set (0.00 sec)
+
+
+[QUESTION 47].mysql> select*from member
+    -> where join_date=
+    -> (select join_date from member
+    -> where member_name='Garima');
+Empty set (0.00 sec)
+
+[QUESTION 48].mysql> select distinct m.member_name
+    -> from member m,issue i,book b
+    -> where m.member_id=i.member_id
+    -> and i.book_id=b.book_id
+    -> and b.author='Loni'
+    -> and monthname(i.issue_date)='December';
++-------------+
+| member_name |
++-------------+
+| Garima Sen  |
++-------------+
+1 row in set (0.00 sec)
+
+[QUESTION 49].mysql> select b.author
+    -> from book b,issue i,member m
+    -> where b.book_id=i.book_id
+    -> and i.member_id=m.member_id
+    -> and m.member_type='Lifetime'
+    -> group by b.author
+    -> having count(*)=
+    -> (select min(cnt) from
+    -> (select count(*) cnt
+    -> from book b1,issue i1,member m1
+    -> where b1.book_id=i1.book_id
+    -> and i1.member_type='Lifetime'
+    -> group by b1.author)x);
+ERROR 1054 (42S22): Unknown column 'i1.member_type' in 'where clause'
+mysql> select b.author
+    -> from book b,issue i,member m
+    -> where b.book_id=i.book_id
+    -> and i.member_id=m.member_id
+    -> and m.member_type='Lifetime'
+    -> group by b.author
+    -> having count(*)=
+    -> (select min(cnt) from
+    -> (select count(*) cnt
+    -> from book b1,issue i1,member m1
+    -> where b1.book_id=i1.book_id
+    -> and m1.member_type='Lifetime'
+    -> group by b1.author)x);
+Empty set (0.00 sec)
+
+mysql> select b.author
+    -> from book b,issue i,member m
+    -> where b.book_id=i.book_id
+    -> and i.member_id=m.member_id
+    -> and m.member_type='Lifetime'
+    -> group by b.author
+    -> having count(*)=
+    -> (select min(cnt) from
+    -> (select count(*) cnt
+    -> from book b1,issue i1,member m1
+    -> where b1.book_id=i1.book_id
+    -> and i1.member_id=m1.member_id
+    -> and m1.member_type='Lifetime'
+    -> group by b1.author)x);
++--------+
+| author |
++--------+
+| Dennis |
+| Rao    |
+| Peter  |
++--------+
+3 rows in set (0.00 sec)
+
+[QUESTION 50].mysql> select distinct m.member_name
+    -> from member m,issue i,book b
+    -> where m.member_id=i.member_id
+    -> and i.book_id=b.book_id
+    -> and b.price>300
+    -> and b.author='Scott Urman';
++--------------+
+| member_name  |
++--------------+
+| Richa Sharma |
+| Amit Kumar   |
++--------------+
+2 rows in set (0.00 sec)
+
+[QUESTION 51].mysql> select m.member_id,m.member_name
+    -> from member m,issue i
+    -> where m.member_id=i.member_id
+    -> and m.member_type='Lifetime'
+    -> and m.join_date between
+    -> '2006-01-01' and '2006-12-31'
+    -> group by
+    -> m.member_id,m.member_name
+    -> having count(*)=1;
++-----------+-------------+
+| member_id | member_name |
++-----------+-------------+
+|       104 | Neha Patil  |
+|       106 | Pooja Mehta |
+|       108 | Kiran Joshi |
++-----------+-------------+
+3 rows in set (0.00 sec)
+
+[QUESTION 52].mysql> update member
+    -> set penalty=100
+    -> where member_name='Garima Sen';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings:0
+
+mysql> select*from member;
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+| member_id | member_name  | member_type | join_date  | acc_open_date | membership_fee | max_books_allowed | penalty |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+|       101 | Garima Sen   | Lifetime    | 2006-01-10 | 2006-01-10    |           1000 |                 5 |     100 |
+|       102 | Richa Sharma | Regular     | 2006-02-15 | 2006-02-15    |            500 |                 3 |     100 |
+|       103 | Amit Kumar   | Regular     | 2006-03-20 | 2006-03-20    |            400 |                 2 |      50 |
+|       104 | Neha Patil   | Lifetime    | 2006-01-10 | 2006-01-10    |           1200 |                 6 |     300 |
+|       105 | Rahul Verma  | Regular     | 2006-04-05 | 2006-04-05    |            450 |                 2 |       0 |
+|       106 | Pooja Mehta  | Lifetime    | 2006-05-12 | 2006-05-12    |           1100 |                 5 |     150 |
+|       107 | Suresh Rao   | Regular     | 2006-06-18 | 2006-06-18    |            500 |                 3 |     200 |
+|       108 | Kiran Joshi  | Lifetime    | 2006-07-01 | 2006-07-01    |           1300 |                 6 |     100 |
+|       109 | Ankit Desai  | Regular     | 2006-08-10 | 2006-08-10    |            450 |                 2 |      75 |
+|       110 | Vikas Singh  | Lifetime    | 2006-09-15 | 2006-09-15    |           1400 |                 7 |       0 |
++-----------+--------------+-------------+------------+---------------+----------------+-------------------+---------+
+10 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
