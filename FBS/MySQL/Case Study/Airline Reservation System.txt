@@ -1,0 +1,507 @@
+
+===============================================
+|DATABASE DESIGN FOR AIRLINE RESERVATION SYSTEM|
+===============================================
+
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 29
+Server version: 8.0.29 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database Airline_reservation_system;
+Query OK, 1 row affected (0.07 sec)
+
+mysql> use Airline_reservation_system;
+Database changed
+mysql> create table passenger (passenger_id int primary key auto_increment,
+    -> first_name varchar(50),
+    -> last_name varchar(50),
+    -> email varchar(100),
+    -> phone varchar(15),
+    -> seat_preference varchar(10));
+Query OK, 0 rows affected (0.16 sec)
+
+mysql> show tables;
++--------------------------------------+
+| Tables_in_airline_reservation_system |
++--------------------------------------+
+| passenger                            |
++--------------------------------------+
+1 row in set (0.04 sec)
+
+mysql> desc passenger;
++-----------------+--------------+------+-----+---------+----------------+
+| Field           | Type         | Null | Key | Default | Extra          |
++-----------------+--------------+------+-----+---------+----------------+
+| passenger_id    | int          | NO   | PRI | NULL    | auto_increment |
+| first_name      | varchar(50)  | YES  |     | NULL    |                |
+| last_name       | varchar(50)  | YES  |     | NULL    |                |
+| email           | varchar(100) | YES  |     | NULL    |                |
+| phone           | varchar(15)  | YES  |     | NULL    |                |
+| seat_preference | varchar(10)  | YES  |     | NULL    |                |
++-----------------+--------------+------+-----+---------+----------------+
+6 rows in set (0.02 sec)
+
+mysql> use Airline_reservation_system;
+Database changed
+mysql> insert into passenger(first_name,last_name,email,phone,seat_preference)
+    -> values ('Ashwini','Jamadar','ashwini@gmail.com','8978765654','Window'),
+    -> ('Angad','Kotale','angad@gmail.com','8998786656','Aisle'),
+    -> ('Krishna','Mandle','krishna@gmail.com','9934566123','Middle'),
+    -> ('Amit','Yample','amit@gmail.com','7765458923','Window'),
+    -> ('Shreya','Shinde','shreya@gmail.com','7867653432','Aisle');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select*from passenger;
++--------------+------------+-----------+-------------------+------------+-----------------+
+| passenger_id | first_name | last_name | email             | phone      | seat_preference |
++--------------+------------+-----------+-------------------+------------+-----------------+
+|            1 | Ashwini    | Jamadar   | ashwini@gmail.com | 8978765654 | Window          |
+|            2 | Angad      | Kotale    | angad@gmail.com   | 8998786656 | Aisle           |
+|            3 | Krishna    | Mandle    | krishna@gmail.com | 9934566123 | Middle          |
+|            4 | Amit       | Yample    | amit@gmail.com    | 7765458923 | Window          |
+|            5 | Shreya     | Shinde    | shreya@gmail.com  | 7867653432 | Aisle           |
++--------------+------------+-----------+-------------------+------------+-----------------+
+5 rows in set (0.00 sec)
+
+mysql> create table aircraft(aircraft_id int primary key auto_increment,
+    -> registration_no varchar(20),
+    -> model varchar(50),
+    -> total_seats int);
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> desc aircraft;
++-----------------+-------------+------+-----+---------+----------------+
+| Field           | Type        | Null | Key | Default | Extra          |
++-----------------+-------------+------+-----+---------+----------------+
+| aircraft_id     | int         | NO   | PRI | NULL    | auto_increment |
+| registration_no | varchar(20) | YES  |     | NULL    |                |
+| model           | varchar(50) | YES  |     | NULL    |                |
+| total_seats     | int         | YES  |     | NULL    |                |
++-----------------+-------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> insert into aircraft(registration_no,model,total_seats)
+    -> values ('VT-A101','Airbus A320',180),
+    -> ('VT-B202','Boeing 737',160),
+    -> (VT-C303','ATR 72',72);
+    '> ^C
+mysql> insert into aircraft(registration_no,model,total_seats)
+    -> values ('VT-A101','Airbus A320',180),
+    -> ('VT-B202','Boeing 737',160),
+    -> ('VT-C303','ATR 72',72);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select*from aircraft;
++-------------+-----------------+-------------+-------------+
+| aircraft_id | registration_no | model       | total_seats |
++-------------+-----------------+-------------+-------------+
+|           1 | VT-A101         | Airbus A320 |         180 |
+|           2 | VT-B202         | Boeing 737  |         160 |
+|           3 | VT-C303         | ATR 72      |          72 |
++-------------+-----------------+-------------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> create table crew(crew_id int primary key auto_increment,
+    -> name varchar(50),
+    -> role varchar(30));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into crew(name,role)
+    -> values ('Captain Rao','Pilot'),
+    -> ('Vikas Shah','Co-Pilot'),
+    -> ('Anita Singh','Attendant'),
+    -> ('Neelam Patil','Attendant');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select*from crew;
++---------+--------------+-----------+
+| crew_id | name         | role      |
++---------+--------------+-----------+
+|       1 | Captain Rao  | Pilot     |
+|       2 | Vikas Shah   | Co-Pilot  |
+|       3 | Anita Singh  | Attendant |
+|       4 | Neelam Patil | Attendant |
++---------+--------------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> create table seat(seat_id int primary key auto_increment,
+    -> aircraft_id int,
+    -> seat_number varchar(5),
+    -> seat_class varchar(20),
+    -> foreign key (aircraft_id)
+    -> references aircraft(aircraft_id));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> desc seat;
++-------------+-------------+------+-----+---------+----------------+
+| Field       | Type        | Null | Key | Default | Extra          |
++-------------+-------------+------+-----+---------+----------------+
+| seat_id     | int         | NO   | PRI | NULL    | auto_increment |
+| aircraft_id | int         | YES  | MUL | NULL    |                |
+| seat_number | varchar(5)  | YES  |     | NULL    |                |
+| seat_class  | varchar(20) | YES  |     | NULL    |                |
++-------------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> create table flight (flight_id int primary key auto_increment,
+    -> flight_number varchar(10),
+    -> origin varchar(50),
+    -> destination varchar(50),
+    -> departure_time datetime,
+    -> arrival_time datetime,
+    -> aircraft_id int,
+    -> foreign key (aircraft_id)
+    -> references aircraft(aircraft_id));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> desc flight;
++----------------+-------------+------+-----+---------+----------------+
+| Field          | Type        | Null | Key | Default | Extra          |
++----------------+-------------+------+-----+---------+----------------+
+| flight_id      | int         | NO   | PRI | NULL    | auto_increment |
+| flight_number  | varchar(10) | YES  |     | NULL    |                |
+| origin         | varchar(50) | YES  |     | NULL    |                |
+| destination    | varchar(50) | YES  |     | NULL    |                |
+| departure_time | datetime    | YES  |     | NULL    |                |
+| arrival_time   | datetime    | YES  |     | NULL    |                |
+| aircraft_id    | int         | YES  | MUL | NULL    |                |
++----------------+-------------+------+-----+---------+----------------+
+7 rows in set (0.00 sec)
+
+mysql> create table fare(fare_id int primary key auto_increment,
+    -> flight_id int,
+    -> seat_class varchar(20),
+    -> price decimal(10,2),
+    -> foreign key (flight_id)
+    -> references flight(flight_id));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> desc fare;
++------------+---------------+------+-----+---------+----------------+
+| Field      | Type          | Null | Key | Default | Extra          |
++------------+---------------+------+-----+---------+----------------+
+| fare_id    | int           | NO   | PRI | NULL    | auto_increment |
+| flight_id  | int           | YES  | MUL | NULL    |                |
+| seat_class | varchar(20)   | YES  |     | NULL    |                |
+| price      | decimal(10,2) | YES  |     | NULL    |                |
++------------+---------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> create table booking(booking_id int primary key auto_increment,
+    -> passenger_id int,
+    -> flight_id int,
+    -> booking_date date,
+    -> status varchar(20),
+    -> foreign key (passenger_id)
+    -> references passenger(passenger_id),
+    -> foreign key (flight_id)
+    -> references flight(flight_id));
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> desc booking;
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| booking_id   | int         | NO   | PRI | NULL    | auto_increment |
+| passenger_id | int         | YES  | MUL | NULL    |                |
+| flight_id    | int         | YES  | MUL | NULL    |                |
+| booking_date | date        | YES  |     | NULL    |                |
+| status       | varchar(20) | YES  |     | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> create table payment(payment_id int primary key auto_increment,
+    -> booking_id int,
+    -> amount decimal(10,2),
+    -> payment_method varchar(20),
+    -> payment_status varchar(20),
+    -> foreign key (booking_id)
+    -> references booking(booking_id));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> desc payment;
++----------------+---------------+------+-----+---------+----------------+
+| Field          | Type          | Null | Key | Default | Extra          |
++----------------+---------------+------+-----+---------+----------------+
+| payment_id     | int           | NO   | PRI | NULL    | auto_increment |
+| booking_id     | int           | YES  | MUL | NULL    |                |
+| amount         | decimal(10,2) | YES  |     | NULL    |                |
+| payment_method | varchar(20)   | YES  |     | NULL    |                |
+| payment_status | varchar(20)   | YES  |     | NULL    |                |
++----------------+---------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> create table flight crew(flight_id int,
+    -> crew_id int,
+    -> primary key (flight_id,crew_id),
+    -> foreign key (flight_id)
+    -> references flight(flight_id),
+    -> foreign key (crew_id)
+    -> references crew(crew_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'crew(flight_id int,
+crew_id int,
+primary key (flight_id,crew_id),
+foreign key (f' at line 1
+mysql> create table flight_crew(flight_id int,
+    -> crew_id int,
+    -> primary key (flight_id,crew_id),
+    -> foreign key (flight_id)
+    -> references flight(flight_id),
+    -> foreign key (crew_id)
+    -> references crew(crew_id));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> desc flight_crew;
++-----------+------+------+-----+---------+-------+
+| Field     | Type | Null | Key | Default | Extra |
++-----------+------+------+-----+---------+-------+
+| flight_id | int  | NO   | PRI | NULL    |       |
+| crew_id   | int  | NO   | PRI | NULL    |       |
++-----------+------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> create table itinerary(itinerary_id int primary key auto_increment,
+    -> passenger_id int,
+    -> foreign key (passenger_id)
+    -> references passenger(passenger_id));
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> desc itinerary;
++--------------+------+------+-----+---------+----------------+
+| Field        | Type | Null | Key | Default | Extra          |
++--------------+------+------+-----+---------+----------------+
+| itinerary_id | int  | NO   | PRI | NULL    | auto_increment |
+| passenger_id | int  | YES  | MUL | NULL    |                |
++--------------+------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> create table itinerary_flight(itinerary_id int,
+    -> flight_id int,
+    -> primary key (itinerary_id,flight_id),
+    -> foreign key (itinerary_id)
+    -> references itinerary(itinerary_id),
+    -> foreign key (flight_id)
+    -> references flight(flight_id));
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> desc itinerary_flight;
++--------------+------+------+-----+---------+-------+
+| Field        | Type | Null | Key | Default | Extra |
++--------------+------+------+-----+---------+-------+
+| itinerary_id | int  | NO   | PRI | NULL    |       |
+| flight_id    | int  | NO   | PRI | NULL    |       |
++--------------+------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into seat(aircraft_id, seat_number, seat_class) 
+     -> values (1,'1A','Business'),
+     -> (1,'12B','Economy'),
+     -> (^c
+mysql>  insert into seat(aircraft_id, seat_number, seat_class) 
+     -> values (1,'1A','Business'),
+     -> (1,'12B','Economy'),
+     -> (2,'14C','Economy'),
+     -> (3,'1A','Economy'),
+     -> (3,'2B','Economy');
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into flight(flight_number, origin, destination, departure_time, arrival_time, aircraft_id)
+     -> values ('AI101','Pune','Delhi','2025-02-01 08:00','2025-02-01 10:00',1),
+     -> ('AI202','Delhi','Mumbai','2025-02-02 12:00','2025-02-02 14:00',2),
+     -> ('AI303','Mumbai','Goa','2025-02-03 16:00','2025-02-03 17:30',3),
+     -> ('AI404','Goa','Pune','2025-02-04 09:00','2025-02-04 10:30',1);
+Query OK, 4 rows affected (0.07 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> insert into fare(flight_id, seat_class, price) 
+     -> values (1,'Economy',4500),
+     -> (1,'Business',9000),
+     -> (2,'Economy',3500),
+     -> (3,'Economy',2500);
+Query OK, 4 rows affected (0.01 sec)
+Records: 4 Duplicates: 0  Warnings: 0
+
+mysql> insert into booking(passenger_id, flight_id, booking_date, status) 
+    -> values (1,1,'2025-01-20','Confirmed'),
+    -> (2,2,'2025-01-21','Confirmed'),
+    -> (3,3,'2025-01-22','Cancelled'),
+    -> (4,1,'2025-01-23','Confirmed'),
+    -> (5,4,'2025-01-24','Pending');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into payment(booking_id, amount, payment_method, payment_status)
+    ->  values(1,4500,'UPI','Success'),
+    -> (2,3500,'Card','Success'),
+    -> (3,2500,'NetBanking','Refunded'),
+    -> (4,4500,'UPI','Success');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4 Duplicates: 0  Warnings: 0
+
+mysql> insert into flight_crew 
+   ->  values (1,1),
+   -> (1,3),
+   -> (2,2),
+   -> (2,4),
+   -> (3,1);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5 Duplicates: 0  Warnings: 0
+
+mysql> insert into itinerary (passenger_id) 
+   ->  values (1),
+   -> (2),
+   -> (3);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3 Duplicates: 0  Warnings: 0
+
+mysql> insert into itinerary_flight
+   ->  values (1,1),
+   -> (1,2),
+   -> (2,3),
+   -> (3,1),
+   -> (3,4);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5 Duplicates: 0  Warnings: 0
+
+
+Enter password: ******
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 32
+Server version: 8.0.29 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+
+mysql> use airline_reservation_system;
+Database changed
+mysql> select*from seat;
++---------+-------------+-------------+------------+
+| seat_id | aircraft_id | seat_number | seat_class |
++---------+-------------+-------------+------------+
+|       1 |           1 | 1A          | Business   |
+|       2 |           1 | 12B         | Economy    |
+|       3 |           2 | 14C         | Economy    |
+|       4 |           3 | 1A          | Economy    |
+|       5 |           3 | 2B          | Economy    |
++---------+-------------+-------------+------------+
+5 rows in set (0.01 sec)
+
+mysql> select*from flight;
++-----------+---------------+--------+-------------+---------------------+---------------------+-------------+
+| flight_id | flight_number | origin | destination | departure_time      | arrival_time        | aircraft_id |
++-----------+---------------+--------+-------------+---------------------+---------------------+-------------+
+|         1 | AI101         | Pune   | Delhi       | 2025-02-01 08:00:00 | 2025-02-01 10:00:00 |           1 |
+|         2 | AI202         | Delhi  | Mumbai      | 2025-02-02 12:00:00 | 2025-02-02 14:00:00 |           2 |
+|         3 | AI303         | Mumbai | Pune        | 2025-02-03 16:00:00 | 2025-02-03 17:30:00 |           3 |
+|         4 | AI404         | Goa    | Pune        | 2025-02-04 09:00:00 | 2025-02-04 10:30:00 |           1 |
++-----------+---------------+--------+-------------+---------------------+---------------------+-------------+
+4 rows in set (0.01 sec)
+
+mysql> select*from fare;
++---------+-----------+------------+---------+
+| fare_id | flight_id | seat_class | price   |
++---------+-----------+------------+---------+
+|       1 |         1 | Economy    | 4500.00 |
+|       2 |         1 | Business   | 9000.00 |
+|       3 |         2 | Economy    | 3500.00 |
+|       4 |         3 | Economy    | 2500.00 |
++---------+-----------+------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select*from booking;
++------------+--------------+-----------+--------------+-----------+
+| booking_id | passenger_id | flight_id | booking_date | status    |
++------------+--------------+-----------+--------------+-----------+
+|          1 |            1 |         1 | 2025-01-20   | Confirmed |
+|          2 |            2 |         2 | 2025-01-21   | Confirmed |
+|          3 |            3 |         3 | 2025-01-22   | Cancelled |
+|          4 |            4 |         1 | 2025-01-23   | Confirmed |
+|          5 |            5 |         4 | 2025-01-24   | Pending   |
++------------+--------------+-----------+--------------+-----------+
+5 rows in set (0.01 sec)
+
+mysql> select*from payment;
++------------+------------+---------+----------------+----------------+
+| payment_id | booking_id | amount  | payment_method | payment_status |
++------------+------------+---------+----------------+----------------+
+|          1 |          1 | 4500.00 | UPI            | Success        |
+|          2 |          2 | 3500.00 | Card           | Success        |
+|          3 |          3 | 2500.00 | NetBanking     | Refunded       |
+|          4 |          4 | 4500.00 | UPI            | Success        |
++------------+------------+---------+----------------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> select*from flight_crew;
++-----------+---------+
+| flight_id | crew_id |
++-----------+---------+
+|         1 |       1 |
+|         3 |       1 |
+|         2 |       2 |
+|         1 |       3 |
+|         2 |       4 |
++-----------+---------+
+5 rows in set (0.01 sec)
+
+mysql> select*from itinerary;
++--------------+--------------+
+| itinerary_id | passenger_id |
++--------------+--------------+
+|            1 |            1 |
+|            2 |            2 |
+|            3 |            3 |
++--------------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> select*from itinerary_flight;
++--------------+-----------+
+| itinerary_id | flight_id |
++--------------+-----------+
+|            1 |         1 |
+|            3 |         1 |
+|            1 |         2 |
+|            2 |         3 |
+|            3 |         4 |
++--------------+-----------+
+5 rows in set (0.01 sec)
+
+mysql>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
